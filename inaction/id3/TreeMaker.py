@@ -2,7 +2,22 @@ from TreeNode import *
 from DataSetUtility import *
 from ID3FeatureProcessor import *
 
+import matplotlib.pyplot as plt
+
 class TreeMaker:
+
+	decisionNode = dict( boxstyle = "sawtooth", fc = "0.6" )
+	leafNode = dict( boxstyle = "circle", fc = "0.8" )
+	rootNode = dict( boxstyle = "roundtooth", fc="cyan")
+	featureValStyle = dict( boxstyle = "round", fc="black")
+	arrow_args = dict( arrowstyle = "<-" )
+
+	@staticmethod
+	def plotNode( nodeTxt, centerPt, parentPt, nodeType ):
+		TreeMaker.plotByDFS.axes.annotate( nodeTxt, xy = parentPt, xycoords='axes fraction', 
+											xytext=centerPt, textcoords='axes fraction', 
+											va="center", ha="center", 
+											bbox=nodeType, arrowprops= TreeMaker.arrow_args )
 
 	@staticmethod
 	def createNode( featureName, featureVals ):
@@ -76,6 +91,147 @@ class TreeMaker:
 			return True, DataSetUtility.getMajorityOutputLabel( dataSet )
 
 		return False, None
+
+
+	@staticmethod
+	def plotTree( root ):
+		fig = plt.figure( 1, facecolor = 'white' )
+		fig.clf()
+
+		TreeMaker.plotByDFS.axes = plt.subplot( 111, frameon = False )
+
+		TreeMaker.plotByDFS.depth = TreeMaker.getTreeDepth( root )
+
+		TreeMaker.plotByDFS.span = TreeMaker.getTreeSpan( root )
+
+		TreeMaker.plotByDFS.yDistance = - 1.0 / ( TreeMaker.plotByDFS.depth  + 1 )
+		TreeMaker.plotByDFS.xDistance = 1.0 / ( TreeMaker.plotByDFS.span + 1 )
+
+		print( "span: {0}, depth: {1}, xDistance: {2}, yDistance: {3}".format( TreeMaker.plotByDFS.span, TreeMaker.plotByDFS.depth, TreeMaker.plotByDFS.xDistance, TreeMaker.plotByDFS.yDistance ) )
+
+		TreeMaker.plotByDFS( root, ( 0.0, 1.0 ), ( 0.0, 1.0 ), ( 1.0, 1.0 ) )
+
+		plt.show()
+
+
+	@staticmethod
+	def getTreeDepth( node ):
+
+		if type( node ) is not TreeNode:
+			return 1;
+
+		max = 0;
+
+		for fVal in node.fValueMap.keys():
+			fValDepth = TreeMaker.getTreeDepth( node.fValueMap[ fVal ] )
+
+			if ( max < fValDepth ):
+				max = fValDepth
+
+		return max + 1
+
+
+	@staticmethod
+	def getTreeSpan( node ):
+
+		count = 0
+
+		for fVal in node.fValueMap.keys():
+			if type( node.fValueMap[ fVal ] ) is TreeNode:
+				count += TreeMaker.getTreeSpan( node.fValueMap[ fVal ] )
+			else:
+				count += 1
+
+		return count
+
+
+
+	@staticmethod
+	def plotByDFS( node, parentNodePt, minL, maxR, annotate = False ):
+
+		# plot children and add annotations
+
+		print( "minL: {0}".format( minL ) )
+		print( "maxR: {0}".format( maxR ) )
+
+		currentLeftPos = ( minL[0], minL[1] + TreeMaker.plotByDFS.yDistance )
+
+		noOfChildren = len( node.fValueMap )
+
+		parentX = minL[0] + noOfChildren * TreeMaker.plotByDFS.xDistance / 2 
+
+		parentPt = ( parentX, minL[1] )
+
+		for fVal in node.fValueMap.keys():
+
+			print( "currentLeftPost: {0}".format( currentLeftPos ) )
+			#TreeMaker.plotFeatureValText( parentPt, currentLeftPos, fVal )	
+
+			if type( node.fValueMap[ fVal ] ) is TreeNode:
+
+				leftX, rightX, immediateX = TreeMaker.plotByDFS( node.fValueMap[ fVal ], parentPt, currentLeftPos, maxR, True )
+
+				currentLeftPos = ( ( leftX + rightX ) / 2 , currentLeftPos[1] )
+
+				nodeTxt = fVal
+
+			else:
+				nodeTxt = node.fValueMap[ fVal ]
+
+				centerPt = TreeMaker.getTextCenterCoords( currentLeftPos )
+
+				TreeMaker.plotNode( nodeTxt, centerPt, parentPt, TreeMaker.leafNode )
+
+				TreeMaker.plotFeatureValText( centerPt, parentPt, fVal )	
+
+				currentLeftPos = ( currentLeftPos[0] + TreeMaker.plotByDFS.xDistance, currentLeftPos[1] )
+
+
+			
+
+		#print this node
+
+		if annotate == True:
+
+			TreeMaker.plotFeatureValText( parentPt, parentNodePt, fVal )	
+			TreeMaker.plotNode( node.fName, parentPt, parentNodePt, TreeMaker.decisionNode )
+
+		else:
+			TreeMaker.plotByDFS.axes.text( parentPt[0] - TreeMaker.plotByDFS.xDistance / 2, parentPt[1], node.fName, bbox = TreeMaker.rootNode )
+
+
+		print( "leaving node {0}", node.fName )
+
+		return currentLeftPos[0], maxR[0], parentPt[0]
+
+		# save leftmost and rightmost childred coords
+		# put node in middle
+		# return right most and node coord
+
+	@staticmethod
+	def plotFeatureValText( parentPt, currentLeftPos, fVal ):
+
+		midX = ( parentPt[0] + currentLeftPos[0] ) / 2
+		midY = ( parentPt[1] + currentLeftPos[1] ) / 2
+
+		TreeMaker.plotByDFS.axes.text( midX, midY, fVal, ha = 'center', color = 'white', bbox = TreeMaker.featureValStyle )
+
+
+	@staticmethod
+	def plotByBFS( node, afterCoord ):
+		pass
+
+
+	@staticmethod
+	def getTextCenterCoords( curL ):
+
+		x = ( TreeMaker.plotByDFS.xDistance / 2 ) + curL[0]
+
+		return ( x, curL[1] )
+
+
+
+
 
 
 

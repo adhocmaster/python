@@ -1,3 +1,5 @@
+from pprint import *
+
 class TreeNode( object ):
 
 	""" valuelabels needs to be a list of strings """
@@ -26,16 +28,23 @@ class TreeNode( object ):
 
 
 	def printNode( self ):
-		print( "Node Name: " + self.fName )
+		print( "feature Name: " + self.fName )
 
-		for key in fValueMap.keys():
+		for key in self.fValueMap.keys():
 
-			print( "feature label: " + str( key ) )
+			print( "********** label: " + self.fName + " - " + str( key ) + " **********" )
 
-			v = fValueMap[key]
+			v = self.fValueMap[key]
 
 			if type( v ) is TreeNode:
 				v.printNode()
 			else:
 				print( "output level: " + str( v ) )
+
+			print( "********** /label: " + self.fName + " - " + str( key ) + " **********" )
+
+	def __str__ ( self ):
+		data = "[ fName: " + pprint( self.fName, 1 ) + " Tree: \n" + pprint( self.fValueMap, 2 ) + " ]"
+		return data 
+
 

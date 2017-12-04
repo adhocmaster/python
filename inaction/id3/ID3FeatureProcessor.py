@@ -1,5 +1,6 @@
 from numpy import *
 from EntropyProcessor import *
+from TreeNode import *
 
 """ works both with NDArray and lists """
 class ID3FeatureProcessor():
@@ -99,6 +100,26 @@ class ID3FeatureProcessor():
 				bestFeatureCol = actualIndex
 
 		return featureNames[bestFeatureCol], bestFeatureCol
+
+
+	@staticmethod
+	def classify( node, inputDic ):
+
+		#traverse tree
+		featureName = node.fName;
+
+		decisionNode = inputDic.get( featureName, '' )
+
+		if '' == decisionNode:
+			return 'NA'
+
+		if type( decisionNode ) is not TreeNode:
+
+			return decisionNode
+
+
+		return classify( decisionNode, inputDic )
+
 
 
 
