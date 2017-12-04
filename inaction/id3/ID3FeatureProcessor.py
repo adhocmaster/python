@@ -108,17 +108,21 @@ class ID3FeatureProcessor():
 		#traverse tree
 		featureName = node.fName;
 
-		decisionNode = inputDic.get( featureName, '' )
+		inputFVal = inputDic.get( featureName, '' )
 
-		if '' == decisionNode:
+		print ( "featureName: {0}, inputFVal: {1}".format( featureName, inputFVal ) )
+
+		if '' == inputFVal:
 			return 'NA'
 
-		if type( decisionNode ) is not TreeNode:
+		outputVal = node.getValue( inputFVal )
 
-			return decisionNode
+		if type( outputVal ) is not TreeNode:
+
+			return outputVal
 
 
-		return classify( decisionNode, inputDic )
+		return ID3FeatureProcessor.classify( outputVal, inputDic )
 
 
 

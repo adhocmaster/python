@@ -2,6 +2,9 @@ from TreeNode import *
 from DataSetUtility import *
 from ID3FeatureProcessor import *
 
+import pickle
+import os
+
 import matplotlib.pyplot as plt
 
 class TreeMaker:
@@ -29,6 +32,8 @@ class TreeMaker:
 	featureNames: reduced featureNames which are not yet processed
 	depth: 0 if tree can grow to maximum level. root is considered to have level 1
 	curLevel: must always be 0
+
+	return: isLeaf, Node
 
 	"""
 	@staticmethod
@@ -92,6 +97,9 @@ class TreeMaker:
 
 		return False, None
 
+	"""
+	plots a tree in the rectangle (0,0) and (1,1)
+	"""
 
 	@staticmethod
 	def plotTree( root ):
@@ -145,7 +153,14 @@ class TreeMaker:
 		return count
 
 
-
+	"""
+	plots a id3tree
+	node the root node
+	parentNodePt = root node
+	minL = lowest coordinate in the space ( 0, 0 )
+	maxR = highest corrdinate in the space ( 1, 1 )
+	annotate = false 
+	"""
 	@staticmethod
 	def plotByDFS( node, parentNodePt, minL, maxR, annotate = False ):
 
@@ -228,6 +243,22 @@ class TreeMaker:
 		x = ( TreeMaker.plotByDFS.xDistance / 2 ) + curL[0]
 
 		return ( x, curL[1] )
+
+	@staticmethod
+	def storeTree( root, filePath ):
+		fh = open( filePath, 'wb' )
+		pickle.dump( root, fh )
+
+		fh.close()
+
+	@staticmethod
+	def getTreeFromFile( filePath ):
+
+		fh = open( filePath, 'rb' )
+		root = pickle.load( fh )
+		fh.close()
+
+		return root 
 
 
 
