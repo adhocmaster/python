@@ -24,7 +24,7 @@ class TreeNode( object ):
 
 	def getValue( self, fValueLabel ):
 
-		return self.fValueMap[ fValueLabel ]
+		return self.fValueMap.get( fValueLabel, "invalidLabel" ) 
 
 
 	def printNode( self ):

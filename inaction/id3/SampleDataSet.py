@@ -17,3 +17,13 @@ def createSampleDataSetNdArr():
 
 	dataSet, featureNames = createSampleDataSet()
 	return asarray( dataSet ), featureNames
+
+def getLenseDataSet( filePath ):
+
+	fileHandler = open( filePath )
+
+	lenses = [ line.strip().split( '\t' ) for line in  fileHandler.readlines() ]
+
+	labels = [ 'age', 'prescript', 'astigmatic', 'tearRate' ]
+
+	return lenses, labels

@@ -166,6 +166,8 @@ class TreeMaker:
 
 		# plot children and add annotations
 
+
+		print( "entering node {0}", node.fName )
 		print( "minL: {0}".format( minL ) )
 		print( "maxR: {0}".format( maxR ) )
 
@@ -179,14 +181,16 @@ class TreeMaker:
 
 		for fVal in node.fValueMap.keys():
 
-			print( "currentLeftPost: {0}".format( currentLeftPos ) )
+			print( "previousLeftPost: {0}".format( currentLeftPos ) )
 			#TreeMaker.plotFeatureValText( parentPt, currentLeftPos, fVal )	
 
 			if type( node.fValueMap[ fVal ] ) is TreeNode:
 
 				leftX, rightX, immediateX = TreeMaker.plotByDFS( node.fValueMap[ fVal ], parentPt, currentLeftPos, maxR, True )
 
-				currentLeftPos = ( ( leftX + rightX ) / 2 , currentLeftPos[1] )
+				#currentLeftPos = ( ( leftX + rightX ) / 2 , currentLeftPos[1] )
+				#currentLeftPos = ( leftX + TreeMaker.plotByDFS.xDistance, currentLeftPos[1] )
+				currentLeftPos = ( leftX , currentLeftPos[1] )
 
 				nodeTxt = fVal
 
@@ -204,6 +208,7 @@ class TreeMaker:
 
 			
 
+		print( "currentLeftPost after printing children: {0}".format( currentLeftPos ) )
 		#print this node
 
 		if annotate == True:
