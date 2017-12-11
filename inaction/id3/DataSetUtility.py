@@ -24,6 +24,8 @@ class DataSetUtility:
 		labelCounts = {}
 
 		size = len( dataSet )
+
+		print ( "getMajorityOutputLabel, data size: {0}".format( size ) )
 		
 		for i in range( size ):
 
@@ -31,6 +33,8 @@ class DataSetUtility:
 
 			labelCounts[ label ] = labelCounts.get( label, 0 ) + 1
 
-		sortedLabelCounts = sorted( labelCounts.items(), operator.itemgetter( 1 ), reverse = True )
+		print ( labelCounts )
+
+		sortedLabelCounts = sorted( labelCounts.items(), key = operator.itemgetter( 1 ), reverse = True )
 
 		return sortedLabelCounts[0][0]

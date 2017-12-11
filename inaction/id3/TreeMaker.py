@@ -68,6 +68,8 @@ class TreeMaker:
 
 		for fVal in featureSplitData.keys():
 
+			print( "fVal: " + fVal )
+
 			isLeaf, outputLabelOrTree = TreeMaker.createTree( featureSplitData[ fVal ], featureNames, featureNamesWithoutMe, depth, curLevel )
 
 
@@ -91,11 +93,11 @@ class TreeMaker:
 			return isLeaf, outputLabel
 
 		if len( featureNames ) == 0  or curLevel > depth:
-			print( "featureNames empty: " + str( featureNames ) + " or curLevel crossed depth: " + str( outputLabel ) )
+			print( "featureNames empty:  or curLevel crossed depth: " + str( curLevel ) )
 
 			return True, DataSetUtility.getMajorityOutputLabel( dataSet )
 
-		return False, None
+		return False, "Maybe"
 
 	"""
 	plots a tree in the rectangle (0,0) and (1,1)

@@ -92,7 +92,7 @@ class ID3FeatureProcessor():
 
 			tempGain = totalEntropy - iEntropy
 
-			print ( "featureCol: " + str( actualIndex ) + "entropy: " + str( iEntropy ) + " tempGain: " + str( tempGain ) )
+			#print ( "featureCol: " + str( actualIndex ) + "entropy: " + str( iEntropy ) + " tempGain: " + str( tempGain ) )
 
 			if ( tempGain > bestInformationGain ):
 

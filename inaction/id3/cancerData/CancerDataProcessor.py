@@ -36,7 +36,19 @@ class CancerDataProcessor:
 		return structuredData
 
 	@staticmethod
-	def segmentData( structuredData ):
+	def getNormalizedDataAndFeatureSteps( structuredData, k = 5 ):
+
+		fVectors = CancerDataProcessor.getFeatureVectors( structuredData )
+		classifiedVectors, featureSteps = CancerDataProcessor.classifyFeatureValues( fVectors, k)
+
+		normalizedAndClassifiedData = CancerDataProcessor.replaceFeatureValuesWithFeatureClasses( structuredData, classifiedVectors )
+
+		return normalizedAndClassifiedData, featureSteps
+
+
+
+	@staticmethod
+	def getFeatureVectors( structuredData ):
 
 		r = len( structuredData )
 		c = len( structuredData[0] )
@@ -50,13 +62,13 @@ class CancerDataProcessor:
 		return numData
 
 	@staticmethod
-	def replaceWithSegmentClassification( structuredData, classifiedSegData ):
+	def replaceFeatureValuesWithFeatureClasses( structuredData, classifiedFeatureVectors ):
 
 		rowNum = len( structuredData )
 		labelIndex = len( structuredData[0] ) - 1
 
 		for i in range( rowNum ):
-			structuredData[i] = classifiedSegData[i].tolist() + [ structuredData[i][ labelIndex ] ]
+			structuredData[i] = classifiedFeatureVectors[i].tolist() + [ structuredData[i][ labelIndex ] ]
 
 		return structuredData
 
@@ -66,20 +78,20 @@ class CancerDataProcessor:
 	for each row we get range, then devide the range by k. And feature is classified from 0 to k-1
 	"""
 	@staticmethod
-	def segmentClassification( segmentData, k = 5 ):
+	def classifyFeatureValues( featureVectors, k = 5 ):
 
-		cols = segmentData.shape[1]
+		cols = featureVectors.shape[1]
 		featureSteps = zeros( cols )
 
 		for i in range( cols ):
 
-			rangeOfF = max( segmentData[ :, i ] ) - min( segmentData[ :, i ] )
+			rangeOfF = max( featureVectors[ :, i ] ) - min( featureVectors[ :, i ] )
 			step = rangeOfF / k
 			print ( "range: {0}, step: {1}".format( rangeOfF, step ) )
-			segmentData[ :, i ] = around( segmentData[ :, i ] / step );
+			featureVectors[ :, i ] = around( featureVectors[ :, i ] / step );
 			featureSteps[i] = step 
 
-		return segmentData, featureSteps
+		return featureVectors, featureSteps
 
 	@staticmethod
 	def classifyFeatureVal( featureSteps, value, fIndex ):
