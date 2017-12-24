@@ -2,7 +2,7 @@
 
 Current plans to implement:
 
-* Binary Naive Bayes Library Options
+* _Binary Naive Bayes Library Options_
   * Overfitting ( Good for samples representing propulation distribution well )
   * Underfitting ( Good for samples representing an unknow population distribution )
   * Fixed Training ( Good for test applications )
