@@ -1,4 +1,4 @@
-class DataSet:
+class TestDataSet:
 
 	def __init__( self ):
 		
